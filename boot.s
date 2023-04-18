@@ -1,19 +1,21 @@
-.code16 # use 16 bits
-.global init
+.code16
+.intel_syntax noprefix
 
+.global init
+# init have to be first funtion in file
 init:
-  mov $msg, %si
-  mov $0xe, %ah
-print_hello:
-  lodsb
-  cmp $0, %al
-  je done
-  int $0x10
-  jmp print_hello
-done:
-  jmp done
+    mov si, offset msg
+    mov ah, 0x0e
+myprint:
+    lodsb
+    cmp al, 0
+    je loop
+    int 0x10
+    jmp myprint
+loop:
+    hlt
 
 msg: .asciz "Hello world!"
 
-.fill 510-(.-init), 1, 0
-.word 0xaa55
+.fill 510-(.-init),1,0
+.word 0xAA55
